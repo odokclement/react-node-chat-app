@@ -24,8 +24,9 @@ import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import apiClent from "@/lib/api-client";
 import { toast } from "sonner";
-import { LOGIN_ROUTE, SINGN_UP_ROUTE } from "@/utils/constants";
+import { LOGIN_ROUTE, SIGN_UP_ROUTE } from "@/utils/constants";
 import { useNavigate } from "react-router-dom";
+import { useAppStore } from "@/store";
 
 
 
@@ -55,6 +56,7 @@ const loginSchema = z.object({
 function Auth() {
 
 const navigate = useNavigate();
+const {setUserInfo}= useAppStore();
 
 
   const loginForm = useForm({
@@ -92,7 +94,10 @@ const navigate = useNavigate();
       .then((response) => {
         if (response.status === 200) {
           console.log("Login successful:", response.data);
+          console.log("User data:", response.data.user);
           toast.success("Login successful!");
+          // Set user info in the store
+          setUserInfo(response.data);
           // Redirect to home page or dashboard
           navigate("/chat");
         } else {
@@ -111,7 +116,7 @@ const navigate = useNavigate();
     // Handle successful signup logic here
     // e.g., API call, redirect, etc.
     const response = await apiClent.post(
-      SINGN_UP_ROUTE,
+      SIGN_UP_ROUTE,
       {
         firstname: values.firstName,
         lastname: values.lastName,
@@ -123,6 +128,8 @@ const navigate = useNavigate();
     if (response.status === 201) {
       console.log("User created successfully:", response.data);
       toast.success("Account created successfully!");
+      // Set user info in the store
+      setUserInfo(response.data);
       // Redirect to login or home page
       navigate("/profile");
     } else {

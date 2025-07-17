@@ -2,18 +2,17 @@ import jwt from "jsonwebtoken";
 import User from "../models/UserModel.js";
 import { compare } from "bcrypt";
 
-const maxAge = 3 * 24 * 60 * 60 * 1000; // 3 days in milliseconds
+const maxAge = 3 * 24 * 60 * 60 ; // 3 days 
 
 const createToken = (email, userId) => {
   return jwt.sign({ email, userId }, process.env.JWT_SECRET_KEY, {
-    expiresIn: maxAge / 1000, // Convert milliseconds to seconds
+    expiresIn: maxAge , 
   });
 };
 
 export const signup = async (request, response, next) => {
   try {
     const { firstname, lastname, email, password } = request.body;
-
     // Validate input
     if (!firstname || !lastname || !email || !password) {
       return response.status(400).json({ message: "All fields are required" });
